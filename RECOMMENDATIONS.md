@@ -2,6 +2,53 @@
 
 Practical tips for running this helloworld smoke test against a VAST cluster. Prefer these over improvising paths that fight DataEngine defaults.
 
+## Tab completion for vastde
+
+After `vastde` is on your `PATH`, enable shell completion so commands, subcommands, and flags tab-complete. Install the script under your home directory only (no `sudo`, no system paths). The generator is `vastde completion`; see also the [dataengine-cli README](https://github.com/vast-data/dataengine-cli/blob/main/README.md).
+
+### Zsh (macOS default)
+
+```bash
+mkdir -p ~/.zsh/completions
+vastde completion zsh > ~/.zsh/completions/_vastde
+```
+
+Add this to `~/.zshrc` **before** `compinit` (Oh My Zsh users: put it above the `source oh-my-zsh.sh` line, or ensure `compinit` still runs after):
+
+```bash
+fpath=(~/.zsh/completions $fpath)
+autoload -Uz compinit && compinit
+```
+
+Reload: `source ~/.zshrc` (or open a new terminal).
+
+### Bash
+
+```bash
+mkdir -p ~/.local/share/bash-completion/completions
+vastde completion bash > ~/.local/share/bash-completion/completions/vastde
+```
+
+If tab completion does not pick it up automatically, add to `~/.bashrc`:
+
+```bash
+[[ -f ~/.local/share/bash-completion/completions/vastde ]] && \
+  source ~/.local/share/bash-completion/completions/vastde
+```
+
+Then `source ~/.bashrc`.
+
+### Fish
+
+```bash
+mkdir -p ~/.config/fish/completions
+vastde completion fish > ~/.config/fish/completions/vastde.fish
+```
+
+Fish loads that directory on its own; open a new shell.
+
+Verify with `vastde <Tab>` — you should see `functions`, `pipelines`, `triggers`, and the rest.
+
 ## Put objects with s3cmd
 
 [PIPELINE.md](PIPELINE.md) shows uploads with the AWS CLI. [s3cmd](https://s3tools.org/s3cmd) is a good alternative for putting objects that fire the element trigger. VAST documents install and config in [Install and configure s3cmd](https://kb.vastdata.com/documentation/docs/install-and-configure-s3cmd).
