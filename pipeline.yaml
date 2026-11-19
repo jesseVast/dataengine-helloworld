@@ -1,0 +1,24 @@
+# Fill in kubernetescluster> and <namespace> from:
+#   vastde compute-clusters list
+#   vastde compute-clusters get <cluster> -o yaml
+#
+# Create the trigger first (see PIPELINE.md):
+#   vastde triggers create element --name helloworld-uploads ...
+#
+# Then:
+#   vastde pipelines create --config @pipeline.yaml --deploy
+
+name: helloworld
+description: Run helloworld on every new object under helloworld/ in the source bucket
+kubernetes_cluster_vrn: vast:dataengine:kubernetes-clusters:<cluster>
+namespace: <namespace>
+manifest:
+  triggers:
+    - name: uploads
+      vrn: vast:dataengine:triggers:helloworld-uploads
+  function_deployments:
+    - name: helloworld
+      function_vrn: vast:dataengine:functions:helloworld
+  links:
+    - source: [uploads]
+      destination: [helloworld]
